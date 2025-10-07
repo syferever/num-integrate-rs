@@ -3,7 +3,7 @@ use rand::Rng;
 use std::io;
 
 fn func(x: f64) -> f64 {
-    x.sin()
+    x * x.sin()
 }
 
 fn monte_carlo(f: fn(f64) -> f64, a: f64, b: f64, n: usize) -> (f64, f64) {
@@ -51,18 +51,19 @@ fn plot(vals: Vec<(f64, f64)>) {
         .configure_mesh()
         .x_max_light_lines(0)
         .y_max_light_lines(0)
+        .x_desc("Error value")
+        .y_desc("Number of MC steps")
         .draw()
         .unwrap();
-    chart
-        .draw_series(LineSeries::new(vals, &RED))
-        .unwrap()
-        .label("Err value");
+    chart.draw_series(LineSeries::new(vals, &RED)).unwrap();
     root.present().unwrap();
     println!("Plot saved to plotters_plot.png");
 }
 
 fn main() {
-    println!("This program numerically integrates sin(x) in the user specified interval (a, b)!");
+    println!(
+        "This program numerically (using Monte Carlo method) integrates sin(x) \nin the user specified interval (a, b)!"
+    );
     println!("Please enter a:");
     let mut a_str = String::new();
     io::stdin()
@@ -83,5 +84,15 @@ fn main() {
             (n as f64, err)
         })
         .collect::<Vec<_>>();
+    let res = monte_carlo(func, a, b, vals[vals.len() - 1].0 as usize);
+    println!("The final result is {} ± {}", res.0, res.1);
     plot(vals);
+
+    println!(
+        "Plot of calculation error versus the number of MC steps is saved. \nPress Enter to quit the application."
+    );
+    let mut buffer = String::new();
+    io::stdin()
+        .read_line(&mut buffer)
+        .expect("Failed to read line");
 }
