@@ -62,7 +62,7 @@ fn plot(vals: Vec<(f64, f64)>) {
 
 fn main() {
     println!(
-        "This program numerically (using Monte Carlo method) integrates sin(x) \nin the user specified interval (a, b)!"
+        "This program numerically (using Monte Carlo method) integrates x*sin(x) \nin the user specified interval (a, b)!"
     );
     println!("Please enter a:");
     let mut a_str = String::new();
